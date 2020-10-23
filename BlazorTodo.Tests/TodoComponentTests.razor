@@ -14,38 +14,48 @@
     Learn more at https://bunit.egilhansen.com/docs/
 *@
 
-<SnapshotTest Description="Counter starts at zero">
+<SnapshotTest Description="Initial view has no items to do">
     <TestInput>
-        <Counter />
+        <Todo></Todo>
     </TestInput>
     <ExpectedOutput>
-        <h1>Counter</h1>
-        <p>Current count: 0</p>
-        <button class="btn btn-primary">Click me</button>
+        <h3>Todo (0)</h3>
+        <ul></ul>
+        <input placeholder="Something todo">
+        <button>Add todo</button>
     </ExpectedOutput>
 </SnapshotTest>
 
-<Fixture Description="Clicking button increments counter" Test="Test">
+<Fixture Description="Adding todo increments count and adds to list" Test="AddTodo">
     <ComponentUnderTest>
-        <Counter></Counter>
+        <Todo></Todo>
     </ComponentUnderTest>
     <Fragment>
-        <p>Current count: 1</p>
+        <h3>Todo (1)</h3>
+        <ul>
+            <li>
+                <input type="checkbox" />
+                <input value="New to do" />
+            </li>
+        </ul>
+        <input placeholder="Something todo" value="">
+        <button>Add todo</button>
     </Fragment>
 </Fixture>
 
 @code
 {
-    public void Test(Fixture fixture)
+    public void AddTodo(Fixture fixture)
     {
         // Arrange
-        var cut = fixture.GetComponentUnderTest<Counter>();
+        var cut = fixture.GetComponentUnderTest<Todo>();
+        cut.Find("input").Change("New to do");
 
-        // Act - click button to increment counter
+        //Act
         cut.Find("button").Click();
 
-        // Assert that the counter was incremented
+        // Assert
         var expected = fixture.GetFragment();
-        cut.Find("p").MarkupMatches(expected);
+        cut.MarkupMatches(expected);
     }
 }
